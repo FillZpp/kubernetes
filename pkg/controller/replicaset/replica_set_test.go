@@ -1965,6 +1965,29 @@ func TestGetPodsToDelete(t *testing.T) {
 				scheduledRunningNotReadyPod,
 			},
 		},
+		{
+			name: "multiple colocated pods and nodes, diff < len(pods)",
+			pods: []*v1.Pod{
+				scheduledRunningReadyPodOnNode1,
+				scheduledRunningReadyPodOnNode1,
+				scheduledRunningReadyPodOnNode1,
+				scheduledRunningReadyPodOnNode2,
+				scheduledRunningReadyPodOnNode2,
+			},
+			related: []*v1.Pod{
+				scheduledRunningReadyPodOnNode1,
+				scheduledRunningReadyPodOnNode1,
+				scheduledRunningReadyPodOnNode1,
+				scheduledRunningReadyPodOnNode2,
+				scheduledRunningReadyPodOnNode2,
+			},
+			diff: 3,
+			expectedPodsToDelete: []*v1.Pod{
+				scheduledRunningReadyPodOnNode1,
+				scheduledRunningReadyPodOnNode1,
+				scheduledRunningReadyPodOnNode2,
+			},
+		},
 	}
 
 	for _, test := range tests {

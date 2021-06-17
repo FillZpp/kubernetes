@@ -37,7 +37,7 @@ import (
 	"time"
 
 	apps "k8s.io/api/apps/v1"
-	"k8s.io/api/core/v1"
+	v1 "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
@@ -819,7 +819,9 @@ func getPodsRankedByRelatedPodsOnSameNode(podsToRank, relatedPods []*v1.Pod) con
 	}
 	ranks := make([]int, len(podsToRank))
 	for i, pod := range podsToRank {
-		ranks[i] = podsOnNode[pod.Spec.NodeName]
+		if ranks[i] = podsOnNode[pod.Spec.NodeName]; ranks[i] > 0 {
+			podsOnNode[pod.Spec.NodeName]--
+		}
 	}
 	return controller.ActivePodsWithRanks{Pods: podsToRank, Rank: ranks, Now: metav1.Now()}
 }
